@@ -1,0 +1,50 @@
+<header>
+  <ion-toolbar color="primary">
+    <div *ngIf="userConductor[0]">
+      <ion-title>{{ nombreUser }}</ion-title>
+    </div>
+  </ion-toolbar>
+</header>
+<app-menu2></app-menu2>
+
+<ion-content class="ion-padding">
+  <ion-button id="open-modal" [disabled]="carreraExistenteActiva">Nueva carrera</ion-button>
+  <app-nueva-carrera></app-nueva-carrera>
+
+  <div *ngIf="carreraExistenteActiva">
+    <div class="ion-text-center">
+      <h1>Pasajeros</h1>
+    </div>
+    <div *ngIf="viajes.length == 0" class="ion-text-center">
+      <span style="color: gray;">Sin pasajeros actualmente</span>
+    </div>
+
+    <ion-card *ngFor="let c of  viajes">
+      <ion-card-header>
+        <ion-grid>
+          <ion-row class="ion-align-items-center">
+            <ion-col size="auto">
+              <ion-icon class="custom-icon" name="person-circle-outline"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <h4><strong>{{ capitalizeFirstLetter(c.nombre) }}</strong></h4>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-header>
+      <ion-card-content>
+        <div>
+          <span>Cantidad de pasajeros: {{c.cantidadPersonas}}</span>
+        </div>
+        <div>
+          <span>Número de teléfono: {{c.telefono}}</span>
+        </div>
+
+        <div>
+          <span>destino: {{c.destino}}</span>
+        </div>
+
+      </ion-card-content>
+    </ion-card> <!-- fin cart -->
+  </div>
+</ion-content>

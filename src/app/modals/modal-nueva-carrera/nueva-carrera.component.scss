@@ -1,0 +1,25 @@
+// styles.scss o en el archivo .scss del componente
+
+.small-modal {
+  max-width: 400px; // Ajustar el ancho máximo del modal
+  width: 90%; // Permitir que el modal ocupe el 90% del ancho de la pantalla
+  height: auto; // Permitir que la altura se ajuste automáticamente
+  margin: auto; // Centrar el modal en la pantalla
+  padding: 20px; // Espaciado interno
+}
+
+.error-message {
+  color: red;
+  font-size: 1, 5em;
+  /* Puedes ajustar el tamaño si es necesario */
+}
+
+
+ion-datetime {
+  max-width: 300px;
+  width: 100%;
+
+  margin-top: 1rem;
+  /* Ajusta el valor según tus necesidades */
+
+}

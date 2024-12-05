@@ -1,0 +1,96 @@
+<div class="ion-page" id="main-content">
+  <header>
+    <ion-toolbar color="primary">
+      <ion-title>Carreras en Proceso</ion-title>
+    </ion-toolbar>
+  </header>
+
+
+
+  <ion-content class="ion-padding">
+    <div *ngIf="carreraExistente.length === 0 || carreraExistente === undefined">
+      <ion-card>
+        <ion-card-content>
+          <h1><strong> Actualmente no hay carrera en proceso. </strong></h1>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div *ngIf="carreraExistente.length !== 0">
+      <ion-card>
+        <ion-card-header style="padding-top: 0px; padding-bottom: 0px;">
+          <h1 style="color: black;">Carrera en proceso</h1>
+        </ion-card-header>
+        <ion-card-content>
+          <div><span>Destino: {{ carreraExistenteJson.finRuta }}</span></div>
+          <div><span>Fecha: {{ fecha }}</span></div>
+          <div><span>Hora: {{ hora }}</span></div>
+          <div><span>Precio: {{ carreraExistenteJson.precio}}</span></div>
+          <div>
+            <span>Asientos disponible: {{ carreraExistenteJson.disponibilidad}}</span>
+          </div>
+          <div class="ion-margin-top" *ngIf="carreraExistenteJson.estado !== 'iniciada'">
+            <span style="font-size: large; color: black; ">Esperando iniciar carrera</span>
+          </div>
+          <div class="ion-margin-top" *ngIf="carreraExistenteJson.estado === 'iniciada'">
+            <span style="font-size: large; color: green;">Carrera iniciada</span>
+          </div>
+
+
+          <div>
+            <div *ngIf="carreraExistenteJson.estado !== 'iniciada'">
+              <ion-button fill="clear" (click)="iniciarCarrera()" [disabled]="deshabilitar" class="custom-button">
+                Iniciar Carrera
+              </ion-button>
+              <div *ngIf="deshabilitar === true">
+                <span style="color: red;">*no se puede iniciar sin pasajeros</span>
+              </div>
+            </div>
+
+            <!-- Fila para alinear los botones en columnas -->
+            <div>
+              <ion-button expand="block" fill="clear" (click)="finalizarCarrera()"
+                class="custom-button3">Finalizar</ion-button>
+            </div>
+
+            <div>
+              <ion-button expand="block" (click)="eliminarCarrera()" color="danger">Cancelar</ion-button>
+            </div>
+
+
+          </div>
+        </ion-card-content>
+
+      </ion-card>
+
+      <ion-accordion-group value="first">
+        <ion-accordion value="first">
+          <ion-item slot="header" color="light">
+            <ion-label>Viajes - pasajeros</ion-label>
+          </ion-item>
+          <div *ngFor="let c of viajes" class="ion-padding" slot="content">
+            <h4><strong>{{ capitalizeFirstLetter(c.nombre) }}</strong></h4>
+            <div>
+              <span>Cantidad de pasajeros: {{c.cantidadPersonas}}</span>
+            </div>
+            <div>
+              <span>Número de teléfono: {{c.telefono}}</span>
+            </div>
+            <div >
+              <span>destino: {{c.destino}}</span>
+            </div>
+
+            <ion-item button detail
+              class="custom-link rounded px-3 py-2 text-decoration-none text-primary"
+              (click)="verRecorrido(c)" >
+              <ion-icon name="location-outline" class="text-primary me-2"></ion-icon>
+              <ion-label class="text-primary text-decoration-underline">Ver el recorrido aquí</ion-label>
+            </ion-item>
+
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+    </div>
+    <app-menu2></app-menu2>
+  </ion-content>
+</div>

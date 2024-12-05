@@ -1,0 +1,14 @@
+.error-message {
+    color: red;
+    font-size: 1,5em; /* Puedes ajustar el tamaño si es necesario */
+  }
+
+  ion-item input[type="file"] {
+    display: none; /* Asegura que el input no se vea */
+  }
+  
+  .error-message {
+    color: var(--ion-color-danger);
+    font-size: 0.85rem; /* Ajusta el tamaño de la fuente si es necesario */
+  }
+  

@@ -1,0 +1,65 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Detalle carrera</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div *ngIf="carreraExistente">
+    <ion-card>
+      <ion-card-content>
+        <ion-item>
+          <span><strong>Nombre: {{carreraExistente.nombre}}</strong></span>
+        </ion-item>
+
+        <ion-item>
+          <span><strong>Patente: {{carreraExistente.patente}}</strong></span>
+        </ion-item>
+    
+        <ion-item>
+          <span><strong>Disponibilidad de asientos: {{carreraExistente.disponibilidad}}</strong></span>
+        </ion-item>
+    
+        <ion-item>
+          <span><strong>Fecha: {{extraerFecha(carreraExistente.hora)}}</strong></span>
+        </ion-item>
+    
+        <ion-item>
+          <span><strong>Hora: {{extraerHora(carreraExistente.hora)}}</strong></span>
+        </ion-item>
+    
+        <ion-item>
+          <span><strong>Inicio Ruta: {{carreraExistente.inicioRuta}}</strong></span>
+        </ion-item>
+    
+        <ion-item>
+          <span><strong>Fin Ruta: {{carreraExistente.finRuta}}</strong></span>
+        </ion-item>
+    
+        <ion-item>
+          <span><strong>Precio: {{carreraExistente.precio}}</strong></span>
+        </ion-item>
+    
+        <ion-item>
+          <span><strong>Comentario Adicional: {{carreraExistente.comentarioA}}</strong></span>
+        </ion-item>
+        <ion-item>
+          <span><strong>valoración del conductor: {{valor}}</strong></span>
+        </ion-item>
+    </ion-card-content>
+  </ion-card>
+    <ion-button id="open-modal" expand="block" fill="clear" class="custom-button">
+      Reservar
+    </ion-button>
+
+    <ng-container *ngIf="hasKeys(carreraExistente)">
+      <app-confirmacion-pasejero [carrera]="carreraExistente"></app-confirmacion-pasejero>
+    </ng-container>
+  </div>
+</ion-content>

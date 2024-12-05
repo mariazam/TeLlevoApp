@@ -1,0 +1,319 @@
+<ion-header>
+  <ion-toolbar class="ion-text-center">
+    <ion-title>TeLlevoApp</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 80vh;">
+    <ion-col size="10" size-md="4">
+      <ion-card>
+        <ion-card-header>
+          <div *ngIf='selectedForm === true'><ion-card-title class="ion-text-center">Registro pasajero</ion-card-title>
+          </div>
+          <div *ngIf='selectedForm === false'><ion-card-title class="ion-text-center">Registro conductor</ion-card-title></div>
+        </ion-card-header>
+
+        <ion-card-content>
+          <!-- <div class="ion-text-center  ion-margin-bottom">
+            <img src="assets/icon/Logo.png" class="animate__animated animate__zoomInUp">
+          </div> -->
+
+          <ion-grid>
+            <ion-row>
+              
+
+              <ion-col size="6">
+                <ion-button expand="full" (click)="showForm(true)">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="12" class="ion-no-margin"><ion-icon name="people-outline" size="large"></ion-icon></ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="12">Pasajero</ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-button>
+              </ion-col>
+
+              <ion-col size="6">
+                <ion-button expand="full" (click)="showForm(false)">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="12" class="ion-no-margin"><ion-icon name="car-sport-outline"
+                          size="large"></ion-icon></ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="12">Conductor</ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-button>
+
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+
+
+          <!-- Pasajero -->
+          <div *ngIf="selectedForm === true">
+            <form [formGroup]="formPasajero" (ngSubmit)="submitPasajero()">
+
+              <ion-item>
+                <ion-label position="floating">Nombre (usuario)</ion-label>
+                <ion-input formControlName="nombre" type="text"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formPasajero.get('nombre')?.invalid && formPasajero.get('nombre')?.touched"
+                class="error-message">
+                <small *ngIf="formPasajero.get('nombre')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formPasajero.get('nombre')?.errors?.['minlength']"> El nombre debe ser mayor a 3
+                  caracteres.</small>
+                <small *ngIf="formPasajero.get('nombre')?.errors?.['pattern']"> Nombre no valido.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Apellido</ion-label>
+                <ion-input formControlName="apellido" type="text"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formPasajero.get('apellido')?.invalid && formPasajero.get('apellido')?.touched"
+                class="error-message">
+                <small *ngIf="formPasajero.get('apellido')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formPasajero.get('apellido')?.errors?.['minlength']"> El apellido debe ser mayor a 3
+                  caracteres.</small>
+                <small *ngIf="formPasajero.get('apellido')?.errors?.['pattern']"> Apellido no valido.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Correo electrónico</ion-label>
+                <ion-input formControlName="email" type="email"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formPasajero.get('email')?.invalid && formPasajero.get('email')?.touched"
+                class="error-message">
+                <small *ngIf="formPasajero.get('email')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formPasajero.get('email')?.errors?.['pattern']"> Correo no valido.</small>
+              </div>
+
+
+              <ion-item>
+                <ion-label position="floating">Numero de celular</ion-label>
+                <ion-input formControlName="telefono" type="text"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formPasajero.get('telefono')?.invalid && formPasajero.get('telefono')?.touched"
+                class="error-message">
+                <small *ngIf="formPasajero.get('telefono')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formPasajero.get('telefono')?.errors?.['pattern']">El número de teléfono no es válido.
+                  Debe
+                  contener entre 10 y 15 dígitos.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Contraseña</ion-label>
+                <ion-input formControlName="password" type="password"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formPasajero.get('password')?.invalid && formPasajero.get('password')?.touched"
+                class="error-message">
+                <small *ngIf="formPasajero.get('password')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formPasajero.get('password')?.errors?.['minlength']">La contraseña debe ser mayor a 4
+                  caracteres.</small>
+                <small *ngIf="formPasajero.get('password')?.errors?.['pattern']"> Contraseña no valido, deben ser
+                  números.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Confirmar Contraseña</ion-label>
+                <ion-input formControlName="password2" type="password"></ion-input>
+              </ion-item>
+
+              <!-- mensaje de la confirmacion de la contraseña es requerida -->
+              <div *ngIf="formPasajero.get('password2')?.invalid && formPasajero.get('password2')?.touched"
+                class="error-message">
+                <small *ngIf="formPasajero.get('password2')?.errors?.['required']">
+                  Este campo es requerido.
+                </small>
+              </div>
+
+              <!-- Mensaje de si las contraseñas no coinciden -->
+              <div *ngIf="formPasajero.errors?.['passwordsMismatch'] && formPasajero.get('password2')?.touched"
+                class="error-message">
+                <small>Las contraseñas no coinciden.</small>
+              </div>
+
+
+              <ion-grid>
+                <ion-row class="ion-justify-content-center">
+                  <ion-col size="auto">
+                    <ion-button color="success" type="submit">Registrarse</ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </form>
+            <div class="ion-text-center ion-margin-bottom">
+              <span>¿Ya estas Registrado?</span>
+              <a href="/login">haz click aquí</a>
+            </div>
+          </div>
+
+          <!--  Conductor -->
+
+          <div *ngIf="selectedForm === false">
+            <form [formGroup]="formCondutor" (ngSubmit)="submitConductor()">
+
+
+              <ion-item>
+                <ion-label position="floating">Nombre (usuario)</ion-label>
+                <ion-input formControlName="nombre" type="text"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formCondutor.get('nombre')?.invalid && formCondutor.get('nombre')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('nombre')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formCondutor.get('nombre')?.errors?.['minlength']"> El nombre debe ser mayor a 3
+                  caracteres.</small>
+                <small *ngIf="formCondutor.get('nombre')?.errors?.['pattern']"> Nombre no valido.</small>
+              </div>
+
+
+
+              <ion-item>
+                <ion-label position="floating">Correo electrónico</ion-label>
+                <ion-input formControlName="email" type="email"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formCondutor.get('email')?.invalid && formCondutor.get('email')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('email')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formCondutor.get('email')?.errors?.['pattern']"> Correo no valido.</small>
+              </div>
+
+
+              <ion-item>
+                <ion-label position="floating">telefono</ion-label>
+                <ion-input formControlName="telefono" type="text"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formCondutor.get('telefono')?.invalid && formCondutor.get('telefono')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('telefono')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formCondutor.get('telefono')?.errors?.['pattern']">El número de teléfono no es válido.
+                  Debe
+                  contener entre 10 y 15 dígitos.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Patente</ion-label>
+                <ion-input formControlName="patente" type="text"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formCondutor.get('patente')?.invalid && formCondutor.get('patente')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('patente')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formCondutor.get('patente')?.errors?.['pattern']">La Patente no es válido.
+                  Debe
+                  contener entre 4 y 6 dígitos.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Modelo</ion-label>
+                <ion-input formControlName="modelo" type="text"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formCondutor.get('modelo')?.invalid && formCondutor.get('modelo')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('modelo')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formCondutor.get('modelo')?.errors?.['minLength']">
+                  Debe
+                  contener mas de  3 dígitos.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Año</ion-label>
+                <ion-input formControlName="anno" type="number"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formCondutor.get('anno')?.invalid && formCondutor.get('anno')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('anno')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formCondutor.get('anno')?.errors?.['max']">Debe ser un numero maximo de 4 digitos.</small>
+
+                <small *ngIf="formCondutor.get('anno')?.errors?.['min']">Debe ser un numero minimo de 4 digitos positivos.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Capacidad</ion-label>
+                <ion-input formControlName="capacidad" type="number"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formCondutor.get('capacidad')?.invalid && formCondutor.get('capacidad')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('capacidad')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formCondutor.get('capacidad')?.errors?.['max']">Debe contener maximo 10 puestos.</small>
+                <small *ngIf="formCondutor.get('capacidad')?.errors?.['min']">Debe ser un numero positivo.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Contraseña</ion-label>
+                <ion-input formControlName="password" type="password"></ion-input>
+              </ion-item>
+
+              <div *ngIf="formCondutor.get('password')?.invalid && formCondutor.get('password')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('password')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="formCondutor.get('password')?.errors?.['minlength']">La contraseña debe ser mayor a 4
+                  caracteres.</small>
+                <small *ngIf="formCondutor.get('password')?.errors?.['pattern']"> Contraseña no valido, deben ser
+                  números.</small>
+              </div>
+
+              <ion-item>
+                <ion-label position="floating">Confirmar Contraseña</ion-label>
+                <ion-input formControlName="password2" type="password"></ion-input>
+              </ion-item>
+
+              <!-- mensaje de la confirmacion de la contraseña es requerida -->
+              <div *ngIf="formCondutor.get('password2')?.invalid && formCondutor.get('password2')?.touched"
+                class="error-message">
+                <small *ngIf="formCondutor.get('password2')?.errors?.['required']">
+                  Este campo es requerido.
+                </small>
+              </div>
+
+              <!-- Mensaje de si las contraseñas no coinciden -->
+              <div *ngIf="formCondutor.errors?.['passwordsMismatch'] && formCondutor.get('password2')?.touched"
+                class="error-message">
+                <small>Las contraseñas no coinciden.</small>
+              </div>
+
+              <!-- pdf
+              <ion-item>
+                <ion-label>Cargar Documento </ion-label>
+                <ion-button expand="block" color="secondary" (click)="fileInput.click()">Seleccionar
+                  Archivo</ion-button>
+                <input type="file" accept=".pdf" (change)="onFileSelected($event)" hidden #fileInput />
+              </ion-item>
+
+              <ion-note color="danger" *ngIf="fileError">Debe cargar un archivo PDF .</ion-note> -->
+
+              <ion-grid>
+                <ion-row class="ion-justify-content-center">
+                  <ion-col size="auto">
+                    <ion-button color="success" type="submit">Registrarse</ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </form>
+            <div class="ion-text-center ion-margin-bottom">
+              <span>¿Ya estas Registrado?</span>
+              <a href="/login">haz click aquí</a>
+            </div>
+          </div>
+        </ion-card-content>
+
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

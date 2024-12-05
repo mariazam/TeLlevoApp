@@ -1,0 +1,57 @@
+<ion-modal trigger="open-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+          <!-- Botón Cancelar -->
+          <ion-button (click)="cancel()" fill="outline" color="light">
+            Cancelar
+          </ion-button>
+        </ion-buttons>
+
+        <ion-buttons slot="end">
+          <ion-button (click)="confirm()" [disabled]="!FormConfimacionPasaje.valid" fill="outline" color="success" strong>
+            Confirmar
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Detalles del Pasaje</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <form [formGroup]="FormConfimacionPasaje">
+            <ion-item>
+              <ion-label position="floating">Cantidad de personas</ion-label>
+              <ion-input formControlName="cantidadPersonas" type="number"></ion-input>
+            </ion-item>
+
+            <div *ngIf="FormConfimacionPasaje.get('cantidadPersonas')?.invalid && FormConfimacionPasaje.get('cantidadPersonas')?.touched" class="error-message">
+              <small *ngIf="FormConfimacionPasaje.get('cantidadPersonas')?.errors?.['required']"> Este campo es requerido.</small>
+              <!-- <small *ngIf="FormConfimacionPasaje.get('cantidadPersonas')?.errors?.['min']"> la cantidad de personas debe ser igual o mayor a 1</small> -->
+              <small *ngIf="FormConfimacionPasaje.get('cantidadPersonas')?.errors?.['cantidadPersonasMayorQueDisponibilidad']">
+                la cantidad de pasajeros no puede ser mayor a la disponibilidad.
+              </small>
+            </div>
+
+            <ion-item>
+              <ion-label position="floating">Destino</ion-label>
+              <ion-input formControlName="destino"></ion-input>
+            </ion-item>
+            <div *ngIf="FormConfimacionPasaje.get('destino')?.invalid && FormConfimacionPasaje.get('destino')?.touched" class="error-message">
+              <small *ngIf="FormConfimacionPasaje.get('destino')?.errors?.['required']"> Este campo es requerido.</small>
+            </div>
+
+            <!-- <ion-item>
+              <ion-label>Equipaje</ion-label>
+              <ion-checkbox formControlName="equipaje"></ion-checkbox>
+            </ion-item> -->
+          </form>
+        </ion-card-content>
+      </ion-card>
+    </ion-content>
+  </ng-template>
+</ion-modal>

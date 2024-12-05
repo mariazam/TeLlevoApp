@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>viaje actual</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="userPasajeroJson.enViaje" class="ion-margin-top">
+    <ion-card>
+      <ion-card-content>
+
+        <div> <span><strong>Nombre del conductor: {{carreraExistente.nombre}}</strong></span></div>
+        <div> <span><strong>Patente: {{carreraExistente.patente}}</strong></span> </div>
+        <div> <span><strong>Fecha: {{extraerFecha(carreraExistente.hora)}}</strong></span> </div>
+        <div> <span><strong>Hora: {{extraerHora(carreraExistente.hora)}}</strong></span></div>
+        <div> <span><strong>Inicio Ruta: {{carreraExistente.inicioRuta}}</strong></span></div>
+        <div> <span><strong>Fin Ruta: {{carreraExistente.finRuta}}</strong></span></div>
+        <div> <span><strong>Precio: {{carreraExistente.precio}}</strong></span></div>
+        <div> <span><strong>Comentario Adicional: {{carreraExistente.comentarioA}}</strong></span></div>
+        <div> <span><strong>Valoración conductor: {{valoracion}}</strong></span></div>
+        <ion-item button detail class="custom-link rounded px-3 py-2 text-decoration-none text-primary"
+          (click)="verRecorrido()">
+          <ion-icon name="location-outline" class="text-primary me-2"></ion-icon>
+          <ion-label class="text-primary text-decoration-underline">Ver el recorrido aquí</ion-label>
+        </ion-item>
+
+
+
+      </ion-card-content>
+    </ion-card>
+    <ion-button expand="block" color="danger" (click)="cancelarViaje()">
+      Cancelar
+    </ion-button>
+    <span style="font-size: x-small; color: grey;margin-left: 10px;">Nota: no se podra cancelar el viaje posterior a los
+      30 min antes de la hora del viaje.</span>
+
+    <div *ngIf="viajeActualJson.puntuacion == false">
+      <ion-card>
+        <ion-card-content>
+          <div class="ion-margin-top">
+            <ion-item lines="none">
+              <span position="stacked">¿Te gustaría valorar a este conductor?</span>
+            </ion-item>
+            <ion-grid>
+              <ion-row class="ion-align-items-center">
+                <ion-col size="6">
+                  <ion-input type="number" [(ngModel)]="valor" min="1" max="5" class="input-con-borde"
+                    placeholder="Ingresa un valor de 1 a 5"></ion-input>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-button expand="block" (click)="valorar()" [disabled]="!esValorValido()">Enviar</ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <ion-item *ngIf="mensajeError" lines="none">
+              <p style="color: red; text-align: center; width: 100%;">{{ mensajeError }}</p>
+            </ion-item>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+
+  </div>
+  <div *ngIf="userPasajeroJson.enViaje == false" class="ion-margin-top">
+    <ion-card>
+      <ion-card-content>
+        <h1><strong> Actualmente no hay viaje en proceso.</strong></h1>
+      </ion-card-content>
+    </ion-card> <!-- fin cart -->
+  </div>
+</ion-content>

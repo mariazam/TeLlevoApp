@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div *ngIf="userConductor[0]">
+      <ion-title>{{ userConductor[0].nombre }}</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content>
+      <div *ngIf="userConductor[0]">
+        <ion-item>
+          <span><strong>Nombre:</strong></span>
+          <span class="ion-margin-start">{{ capitalizeFirstLetter(userConductor[0].nombre) }}</span>
+        </ion-item>
+        <ion-item>
+          <span><strong>Correo electrónico:</strong></span><span> {{ userConductor[0].email }}</span>
+        </ion-item>
+        <ion-item>
+          <span><strong>Telefono:</strong></span><span class="ion-margin-start"> {{ userConductor[0].telefono }}</span>
+        </ion-item>
+        <ion-item>
+          <span><strong>valoración:</strong></span><span class="ion-margin-start"> {{ valor }}</span>
+        </ion-item>
+      </div>
+      <ion-button color="danger" (click)="cerrarSesion()" class="ion-margin">
+        Cerrar sesión
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

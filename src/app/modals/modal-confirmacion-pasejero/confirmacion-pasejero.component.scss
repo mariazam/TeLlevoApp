@@ -1,0 +1,22 @@
+ion-modal {
+    --border-radius: 20px;
+  }
+  
+  ion-toolbar {
+    --background: var(--ion-color-primary);
+    --color: white;
+  }
+  
+  ion-button {
+    margin: 10px;
+  }
+  
+  ion-card {
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    --border-radius: 10px;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 1,5em;/* Puedes ajustar el tamaño si es necesario */
+  }

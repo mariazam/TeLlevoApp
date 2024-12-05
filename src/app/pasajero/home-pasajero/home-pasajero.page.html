@@ -1,0 +1,77 @@
+<header>
+  <ion-toolbar color="primary">
+    <div *ngIf="userPasajero[0]">
+      <ion-title>{{ userPasajero[0].nombre }}</ion-title>
+    </div>
+  </ion-toolbar>
+</header>
+<app-menu2></app-menu2>
+
+<ion-content class="ion-padding">
+
+
+
+  <div class="ion-text-center">
+    <h1>Viajes disponibles</h1>
+  </div>
+
+
+  <!-- <div *ngIf="userPasajero[0] && userPasajero.enViaje === false && carrerasEnEspera.length !== 0"></div> -->
+  <div *ngIf="carreraExistente">
+    <div *ngIf="userPasajeroJson.enViaje == false  && carreraExistente.length !== 0">
+      <ion-card *ngFor="let c of carreraExistente">
+        <ion-card-header>
+          <ion-grid> <ion-row class="ion-align-items-center">
+              <ion-col size="auto">
+                <ion-icon class="custom-icon" name="person-circle-outline"></ion-icon>
+              </ion-col>
+              <ion-col>
+                <h4><strong>{{ capitalizeFirstLetter(c.nombre) }}</strong></h4>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-header>
+        <ion-card-content>
+
+          <div>
+            <span>disponibilidad: {{c.disponibilidad}}</span>
+          </div>
+          <div>
+            <span>Fecha: {{extraerFecha(c.hora)}}</span>
+          </div>
+          <div>
+            <span>Hora: {{extraerHora(c.hora)}}</span>
+          </div>
+          <div>
+            <span>Inicio de ruta: {{c.inicioRuta}}</span>
+          </div>
+          <div>
+            <span>Final de ruta: {{c.finRuta}}</span>
+          </div>
+          <div class="ion-margin-top">
+            <ion-button class="custom-button" fill="clear" (click)="detalleViaje(c.id)">
+              + Información
+            </ion-button>
+          </div>
+
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <div *ngIf="carreraExistente.length === 0 && userPasajeroJson.enViaje == false">
+    <ion-card>
+      <ion-card-content>       
+        <h1><strong> Actualmente no hay viajes disponibles verifique mas tarde.</strong></h1>
+      </ion-card-content>
+    </ion-card> 
+  </div> 
+
+  <div *ngIf="carreraExistente.length !== 0 && userPasajeroJson.enViaje == true">
+    <ion-card>
+      <ion-card-content>       
+        <h1><strong> Actualmente hay un viaje en proceso, para mas información, <a href="pasajero/viaje-actual">presione aquí</a></strong></h1>
+      </ion-card-content>
+    </ion-card> 
+  </div>
+</ion-content> 

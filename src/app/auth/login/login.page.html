@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar class="ion-text-center">
+    <ion-title>TeLlevoApp</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content [fullscreen]="true">
+  <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 80vh;">
+    <ion-col size="10" size-md="4">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title class="ion-text-center">Bienvenidos a TeLlevoApp</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <div class="ion-text-center ion-margin-bottom">
+            <img src="assets/icon/Logo.png" class="animate__animated animate__zoomInUp" />
+          </div>
+
+
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <ion-item>
+              <ion-label position="stacked">Correo electrónico</ion-label>
+              <ion-input formControlName="email" placeholder="Ingrese su correo" x></ion-input>
+            </ion-item>
+
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+              <small *ngIf="loginForm.get('email')?.errors?.['required']"> Este campo es requerido.</small>
+              <small *ngIf="loginForm.get('email')?.errors?.['minlength']"> debe ser ser minimo de 3
+                caracteres.</small>
+            </div>
+
+
+
+            <ion-item class="ion-margin-bottom">
+              <ion-label position="stacked">Contraseña</ion-label>
+              <ion-input #password formControlName="password" type="password" placeholder="********"></ion-input>
+            </ion-item>
+
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+              <small *ngIf="loginForm.get('password')?.errors?.['required']"> Este campo es requerido.</small>
+              <small *ngIf="loginForm.get('password')?.errors?.['minlength']"> debe ser ser minimo de 4 numeros.</small>
+              <small *ngIf="loginForm.get('password')?.errors?.['pattern']"> La contraseña debe ser numérica.</small>
+            </div>
+
+            <div class="ion-text-end ion-margin-end">
+              <a href="/recover-password">Recuperar Contraseña</a>
+            </div>
+
+            <ion-grid>
+              <ion-row class="ion-justify-content-center">
+                <ion-col size="auto">
+                  <ion-button color="success" type="submit">Iniciar Sesión</ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <div class="ion-text-center  ion-margin-bottom">
+              <a href="/sign-up">Registrarse</a>
+            </div>
+
+          </form>
+
+
+        </ion-card-content>
+
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+  <ion-alert
+  [isOpen]="isAlertOpen"
+  [header]="alertHeader"
+  [message]="alertMessage"
+  [cssClass]="alertCssClass"
+  (didDismiss)="resetAlert()">
+</ion-alert>
+
+</ion-content>

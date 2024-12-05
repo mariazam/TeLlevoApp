@@ -1,0 +1,24 @@
+.custom-button {
+    color: white; /* Color del texto */
+    height: 5px; /* Altura del botón */
+    line-height: 5px; /* Alineación vertical del texto */
+    padding: 0 10px; /* Quitar padding vertical y mantener padding horizontal */
+    background-color: #28a745; /* Fondo verde */
+    border-radius: 8px; /* Bordes redondeados */
+    font-size: 12px; /* Tamaño de la fuente */
+    font-weight: bold; /* Hacer el texto en negrita */
+    text-transform: uppercase; /* Convertir texto a mayúsculas */
+    transition: background-color 0.3s ease; /* Animación al pasar el ratón */
+  
+    &:hover {
+      background-color: #218838; /* Cambio de color al hacer hover */
+    }
+  
+    &:active {
+      background-color: #1e7e34; /* Color cuando se presiona el botón */
+    }
+  }
+  
+  .custom-icon {
+    font-size: 50px;  /* Cambia el tamaño del icono */
+}
