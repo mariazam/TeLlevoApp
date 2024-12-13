@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef  } from '@angular/core'
 import { Router, NavigationEnd } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { Menu2Component } from '../../menu2/menu2.component'
+import { Menu2Component } from '../../menu2-conductor/menu2.component'
 import { personCircleOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { CommonModule } from '@angular/common';
@@ -12,13 +12,14 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { AuthService } from 'src/app/services/auth-firebase.service';
+import { MenuComponent } from "../../menu-pasajero/menu.component";
 
 @Component({
   selector: 'app-home-pasajero',
   templateUrl: './home-pasajero.page.html',
   styleUrls: ['./home-pasajero.page.scss'],
   standalone: true,
-  imports: [IonicModule, Menu2Component, CommonModule, FormsModule]
+  imports: [IonicModule, MenuComponent, CommonModule, FormsModule]
 })
 export class HomePasajeroPage implements OnInit, OnDestroy {
 
@@ -74,7 +75,7 @@ export class HomePasajeroPage implements OnInit, OnDestroy {
 
 
   detalleViaje(id: string) {
-    this.router.navigate(['pasajero/detalle-viaje'], { queryParams: { id: id } });
+    this.router.navigate(['/pasajero/detalle-viaje'], { queryParams: { id: id } });
   }
 
   capitalizeFirstLetter(str: string): string {

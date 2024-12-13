@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { personCircleOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { ConfirmacionPasejeroComponent } from 'src/app/modals/modal-confirmacion-pasejero/confirmacion-pasejero.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { AuthService } from 'src/app/services/auth-firebase.service';
 
@@ -20,13 +20,15 @@ import { AuthService } from 'src/app/services/auth-firebase.service';
 export class DetalleViajePage implements OnInit {
 
   id = "";
+  uid: string|null = "";
+  user: any = [];
   valor: number = 0
 
   carreraExistente : any = {}
   userConductor : any = {}
 
 
-  constructor(private route: ActivatedRoute,private authService: AuthService, private firestoreService: FirestoreService
+  constructor(private route: ActivatedRoute,private authService: AuthService, private firestoreService: FirestoreService, private router2: Router
   ) {
     addIcons({ personCircleOutline })
   }
@@ -87,6 +89,10 @@ export class DetalleViajePage implements OnInit {
     if (!str) return str; // Retorna el string original si está vacío
 
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  async volver () {
+    this.router2.navigate(['/pasajero/home']);
   }
 
 

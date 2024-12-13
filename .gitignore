@@ -6,6 +6,7 @@ src/environments/
 www/
 dist/
 build/
+android/
 
 # Environments
 .env

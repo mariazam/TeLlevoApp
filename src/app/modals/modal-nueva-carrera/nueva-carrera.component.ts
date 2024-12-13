@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { IonModal } from '@ionic/angular';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { AuthService } from 'src/app/services/auth-firebase.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nueva-carrera',
@@ -86,7 +87,6 @@ export class NuevaCarreraComponent implements OnInit {
 
   ngOnInit() {
     this.datosUsuario();
-
   }
 
   capacidadMenorOIgualDisponibilidad(formGroup: AbstractControl): ValidationErrors | null {
@@ -118,10 +118,10 @@ export class NuevaCarreraComponent implements OnInit {
     try {
       const uid = await this.authService.getCurrentUser(); // Obtener el UID del usuario autenticado
       this.uid = uid;
-  
-      this.userConductor = await this.firestoreService.getDocumentsByUidAndField("usuarios", "uid", this.uid ); // Esperar los datos del conductor
+
+      this.userConductor = await this.firestoreService.getDocumentsByUidAndField("usuarios", "uid", this.uid); // Esperar los datos del conductor
       console.log('Datos del conductor:', this.userConductor);
-  
+
       console.log('CONDUCTOR:', this.userConductor);
     } catch (error) {
       console.error('Error al obtener el usuario o conductor:', error);
@@ -129,7 +129,6 @@ export class NuevaCarreraComponent implements OnInit {
   }
 
   async agregar() {
-    console.log("hola", this.userConductor)
     const nuevaCarrera = {
       nombre: this.userConductor[0].nombre,
       patente: this.userConductor[0].patente,
@@ -142,36 +141,54 @@ export class NuevaCarreraComponent implements OnInit {
       uid: this.uid,
       estado: "espera",
     };
-    console.log("nueva carrera", nuevaCarrera)
 
-    try {
-      const resp = await this.firestoreService.addDocument('carreras', nuevaCarrera);
-      console.log("respuesta", resp)
-      alert('Carrera agregada exitosamente');
-    } catch (error: unknown) {
-      alert('Error desconocido al agregar la carrera');
-    }
+    await this.firestoreService.addDocument('carreras', nuevaCarrera);
   }
 
   // Método para cancelar y cerrar el modal
   cancel() {
-    this.modal.dismiss(null, 'cancel');
     this.formNuevaCarrera.reset();
   }
 
   // Método para confirmar y realizar alguna acción
-  confirm() {
+  async confirm() {
     this.formNuevaCarrera.markAllAsTouched();
     if (this.formNuevaCarrera.valid) {
-      this.agregar(); // Agrega la nueva carrera
-      this.formNuevaCarrera.reset();
-      this.modal.dismiss(null, 'confirm').then(() => {
-      window.location.href = '/conductor/carreras-en-proceso'; // Recarga la página después de cerrar el modal
-      });
+      try {
+        await this.agregar(); // Llama al método para agregar la nueva carrera
+        Swal.fire({
+          icon: 'success',
+          title: '¡Carrera agregada!',
+          text: 'La carrera se ha agregado exitosamente.',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+        }).then(() => {
+          this.formNuevaCarrera.reset();
+          window.location.href = '/conductor/carreras-en-proceso'; // Redirigir después de éxito
+        });
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al agregar la carrera. Inténtelo nuevamente.',
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'Cerrar',
+          heightAuto: false,
+        });
+      }
     } else {
-      alert('Por favor, complete el formulario correctamente.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: 'Por favor, complete el formulario correctamente antes de continuar.',
+        confirmButtonColor: '#f0ad4e',
+        confirmButtonText: 'Entendido',
+        heightAuto: false,
+      });
     }
   }
+
 
   getLocalISOString(): string {
     const now = new Date();

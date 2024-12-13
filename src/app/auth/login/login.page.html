@@ -1,81 +1,80 @@
-<ion-header>
-  <ion-toolbar class="ion-text-center">
-    <ion-title>TeLlevoApp</ion-title>
-  </ion-toolbar>
-</ion-header>
+<header class="bg-primary text-white text-center py-3">
+  <h1>TeLlevoApp</h1>
+</header>
 
-
-
-<ion-content [fullscreen]="true">
-  <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 80vh;">
-    <ion-col size="10" size-md="4">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title class="ion-text-center">Bienvenidos a TeLlevoApp</ion-card-title>
-        </ion-card-header>
-
-        <ion-card-content>
-          <div class="ion-text-center ion-margin-bottom">
-            <img src="assets/icon/Logo.png" class="animate__animated animate__zoomInUp" />
+<main class="container-fluid" style="height: 100vh; overflow-y: auto;">
+  <div class="d-flex justify-content-center align-items-center" style="min-height: 100%;">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card shadow-sm">
+        <!-- Card Header -->
+        <div class="card-header text-center bg-primary text-white">
+          <h5 class="card-title">Iniciar Sesión</h5>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <!-- Logo -->
+          <div class="text-center mb-4">
+            <img src="assets/icon/Logo.png" class="img-fluid animate__animated animate__zoomInUp" alt="Logo">
           </div>
 
-
+          <!-- Formulario -->
           <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-            <ion-item>
-              <ion-label position="stacked">Correo electrónico</ion-label>
-              <ion-input formControlName="email" placeholder="Ingrese su correo" x></ion-input>
-            </ion-item>
-
-            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
-              <small *ngIf="loginForm.get('email')?.errors?.['required']"> Este campo es requerido.</small>
-              <small *ngIf="loginForm.get('email')?.errors?.['minlength']"> debe ser ser minimo de 3
-                caracteres.</small>
+            <!-- Email Field -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico</label>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                class="form-control"
+                placeholder="Ingrese su correo"
+              />
+              <!-- Mensajes de error -->
+              <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
+                <small *ngIf="loginForm.get('email')?.errors?.['required']"> Este campo es requerido.</small>
+                <small *ngIf="loginForm.get('email')?.errors?.['pattern']"> debe cumplir con el formato de correo.</small>
+              </div>
             </div>
 
-
-
-            <ion-item class="ion-margin-bottom">
-              <ion-label position="stacked">Contraseña</ion-label>
-              <ion-input #password formControlName="password" type="password" placeholder="********"></ion-input>
-            </ion-item>
-
-            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
-              <small *ngIf="loginForm.get('password')?.errors?.['required']"> Este campo es requerido.</small>
-              <small *ngIf="loginForm.get('password')?.errors?.['minlength']"> debe ser ser minimo de 4 numeros.</small>
-              <small *ngIf="loginForm.get('password')?.errors?.['pattern']"> La contraseña debe ser numérica.</small>
+            <!-- Password Field -->
+            <div class="mb-3">
+              <label for="password" class="form-label">Contraseña</label>
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                class="form-control"
+                placeholder="********"
+              />
+              <!-- Mensajes de error -->
+              <div
+                *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                class="text-danger"
+              >
+                <small *ngIf="loginForm.get('password')?.errors?.['required']">Este campo es requerido.</small>
+                <small *ngIf="loginForm.get('password')?.errors?.['minlength']">Debe tener al menos 4 caracteres.</small>
+                <small *ngIf="loginForm.get('password')?.errors?.['pattern']">La contraseña debe ser numérica.</small>
+              </div>
             </div>
 
-            <div class="ion-text-end ion-margin-end">
-              <a href="/recover-password">Recuperar Contraseña</a>
+            <!-- Recover Password Link -->
+            <div class="text-end">
+              <a routerLink="/recover-password" class="text-decoration-none">Recuperar Contraseña</a>
             </div>
 
-            <ion-grid>
-              <ion-row class="ion-justify-content-center">
-                <ion-col size="auto">
-                  <ion-button color="success" type="submit">Iniciar Sesión</ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-
-            <div class="ion-text-center  ion-margin-bottom">
-              <a href="/sign-up">Registrarse</a>
+            <!-- Submit Button -->
+            <div class="d-flex justify-content-center my-3">
+              <button type="submit" class="btn btn-success w-100" [disabled]="loginForm.invalid">Iniciar Sesión</button>
             </div>
 
+            <!-- Register Link -->
+            <div class="text-center mt-3">
+              <span>¿No tienes cuenta? </span>
+              <a routerLink="/sign-up" class="text-decoration-none">Registrarse</a>
+            </div>
           </form>
-
-
-        </ion-card-content>
-
-      </ion-card>
-    </ion-col>
-  </ion-row>
-
-  <ion-alert
-  [isOpen]="isAlertOpen"
-  [header]="alertHeader"
-  [message]="alertMessage"
-  [cssClass]="alertCssClass"
-  (didDismiss)="resetAlert()">
-</ion-alert>
-
-</ion-content>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,42 +1,24 @@
-<ion-modal trigger="open-modal">
-  <ng-template>
-    <ion-header>
-      <ion-toolbar color="primary">
-        <ion-buttons slot="start">
-          <!-- Botón Cancelar -->
-          <ion-button (click)="cancel()" fill="outline" color="light">
-            Cancelar
-          </ion-button>
-        </ion-buttons>
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="nuevaCarreraModal" tabindex="-1" aria-labelledby="nuevaCarreraModalLabel" aria-hidden="true"
+  data-bs-backdrop="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="nuevaCarreraModalLabel">Nueva Carrera</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-        <ion-buttons slot="end">
-          <ion-button (click)="confirm()" [disabled]="!formNuevaCarrera.valid" fill="outline" color="success" strong>
-            Confirmar
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content class="ion-padding">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Nueva carrera</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <form [formGroup]="formNuevaCarrera">
-
-            <ion-item>
-              <ion-label position="floating">disponibilidad de asientos</ion-label>
-              <ion-input formControlName="disponibilidad" type="number"></ion-input>
-            </ion-item>
-
-            <!-- <ion-item *ngIf="formNuevaCarrera.errors?.['capacidadMayorQueDisponibilidad']">
-              <ion-label color="danger">La capacidad no puede ser mayor que la disponibilidad.</ion-label>
-            </ion-item> -->
-
+      <!-- Body -->
+      <div class="modal-body">
+        <form [formGroup]="formNuevaCarrera">
+          <!-- Disponibilidad -->
+          <div class="mb-3">
+            <label for="disponibilidad" class="form-label">Disponibilidad de asientos</label>
+            <input type="number" id="disponibilidad" formControlName="disponibilidad" class="form-control" />
             <div
               *ngIf="formNuevaCarrera.get('disponibilidad')?.invalid && formNuevaCarrera.get('disponibilidad')?.touched"
-              class="error-message">
+              class="text-danger">
               <small *ngIf="formNuevaCarrera.get('disponibilidad')?.errors?.['required']">
                 Este campo es requerido.
               </small>
@@ -44,66 +26,70 @@
                 La disponibilidad no puede ser mayor que la capacidad del auto.
               </small>
             </div>
+          </div>
 
-            <ion-item>
-              <ion-label position="stacked">Selecciona la fecha y la hora</ion-label>
-              <ion-datetime
-                formControlName="hora"
-                display-format="DD MMM YYYY HH:mm"
-                picker-format="DD MMM YYYY HH:mm"
-                presentation="date-time">
-              </ion-datetime>
-            </ion-item>
-            
-
+          <!-- Fecha y hora -->
+          <div class="mb-3">
+            <label for="fechaHora" class="form-label">Selecciona la fecha y la hora</label>
+            <input type="datetime-local" id="fechaHora" formControlName="hora" class="form-control" step="60" />
             <div *ngIf="formNuevaCarrera.get('hora')?.invalid && formNuevaCarrera.get('hora')?.touched"
-              class="error-message">
-              <small *ngIf="formNuevaCarrera.get('hora')?.errors?.['required']"> Este campo es requerido.</small>
+              class="text-danger">
+              <small>Este campo es requerido.</small>
             </div>
+          </div>
 
 
-            <ion-item>
-              <ion-label position="floating">Inicio de ruta</ion-label>
-              <ion-input formControlName="inicioRuta" type="text"></ion-input>
-            </ion-item>
-
+          <!-- Inicio de ruta -->
+          <div class="mb-3">
+            <label for="inicioRuta" class="form-label">Inicio de ruta</label>
+            <input type="text" id="inicioRuta" formControlName="inicioRuta" class="form-control" />
             <div *ngIf="formNuevaCarrera.get('inicioRuta')?.invalid && formNuevaCarrera.get('inicioRuta')?.touched"
-              class="error-message">
-              <small *ngIf="formNuevaCarrera.get('inicioRuta')?.errors?.['required']"> Este campo es requerido.</small>
+              class="text-danger">
+              <small>Este campo es requerido.</small>
             </div>
+          </div>
 
-            <ion-item>
-              <ion-label position="floating">fin de ruta</ion-label>
-              <ion-input formControlName="finRuta" type="text"></ion-input>
-            </ion-item>
-
+          <!-- Fin de ruta -->
+          <div class="mb-3">
+            <label for="finRuta" class="form-label">Fin de ruta</label>
+            <input type="text" id="finRuta" formControlName="finRuta" class="form-control" />
             <div *ngIf="formNuevaCarrera.get('finRuta')?.invalid && formNuevaCarrera.get('finRuta')?.touched"
-              class="error-message">
-              <small *ngIf="formNuevaCarrera.get('finRuta')?.errors?.['required']"> Este campo es requerido.</small>
+              class="text-danger">
+              <small>Este campo es requerido.</small>
             </div>
+          </div>
 
-            <ion-item>
-              <ion-label position="floating">precio</ion-label>
-              <ion-input formControlName="precio" type="number"></ion-input>
-            </ion-item>
-
+          <!-- Precio -->
+          <div class="mb-3">
+            <label for="precio" class="form-label">Precio</label>
+            <input type="number" id="precio" formControlName="precio" class="form-control" />
             <div *ngIf="formNuevaCarrera.get('precio')?.invalid && formNuevaCarrera.get('precio')?.touched"
-              class="error-message">
-              <small *ngIf="formNuevaCarrera.get('precio')?.errors?.['required']"> Este campo es requerido.</small>
+              class="text-danger">
+              <small>Este campo es requerido.</small>
             </div>
+          </div>
 
-            <ion-item>
-              <ion-label position="floating">comentario adicional</ion-label>
-              <ion-input formControlName="comentarioA" type="text"></ion-input>
-            </ion-item>
-
+          <!-- Comentario adicional -->
+          <div class="mb-3">
+            <label for="comentarioA" class="form-label">Comentario adicional</label>
+            <input type="text" id="comentarioA" formControlName="comentarioA" class="form-control" />
             <div *ngIf="formNuevaCarrera.get('comentarioA')?.invalid && formNuevaCarrera.get('comentarioA')?.touched"
-              class="error-message">
-              <small *ngIf="formNuevaCarrera.get('comentarioA')?.errors?.['required']"> Este campo es requerido.</small>
+              class="text-danger">
+              <small>Este campo es requerido.</small>
             </div>
-          </form>
-        </ion-card-content>
-      </ion-card>
-    </ion-content>
-  </ng-template>
-</ion-modal>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancel()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-success" (click)="confirm()" [disabled]="!formNuevaCarrera.valid">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

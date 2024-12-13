@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
+import { TabsComponent } from './tabs/tabs.component';
+import { ConductorPage } from './conductor/home-conductor/home-conductor.page';
+import { CarrerasEnProcesoPage } from './conductor/carreras-en-proceso/carreras-en-proceso.page';
+import { PerfilUsuarioPage } from './conductor/perfil-usuario/perfil-usuario.page';
 
 export const routes: Routes = [
   {
@@ -19,68 +23,61 @@ export const routes: Routes = [
     path: 'sign-up',
     loadComponent: () => import('./auth/sign-up/sign-up.page').then(m => m.SignUpPage),
   },
+  //conductor
   {
-    path: 'conductor',
-    loadComponent: () => import('./tabs/tabs.component').then(m => m.TabsComponent),
+    path: 'conductor/home',
     canActivate: [AuthGuard],
     data: { role: 'conductor' }, // Solo para conductores
-    children: [
-
-      {
-        path: 'home',
-        loadComponent: () => import('./conductor/home-conductor/home-conductor.page').then(m => m.ConductorPage)
-      },
-      {
-        path: 'carreras-en-proceso',
-        loadComponent: () => import('./conductor/carreras-en-proceso/carreras-en-proceso.page').then(m => m.CarrerasEnProcesoPage)
-      },
-      {
-        path: 'perfil-usuario',
-        loadComponent: () => import('./conductor/perfil-usuario/perfil-usuario.page').then( m => m.PerfilUsuarioPage)
-      },
-      {
-        path: 'mapa',
-        loadComponent: () => import('./maps/maps.page').then( m => m.MapsPage)
-      },
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
-      },
-    ]
+    component: ConductorPage
   },
   {
-    path: 'pasajero',
-    loadComponent: () => import('./tabs-pasajero/tabs-pasajero.component').then(m => m.TabsPasajeroComponent),
+    path: 'conductor/carreras-en-proceso',
+    canActivate: [AuthGuard],
+    component: CarrerasEnProcesoPage,
+    data: { role: 'conductor' }, // Solo para conductores
+  },
+  {
+    path: 'conductor/perfil-usuario',
+    canActivate: [AuthGuard],
+    component: PerfilUsuarioPage,
+    data: { role: 'conductor' }, // Solo para conductores
+  },
+  {
+    path: 'conductor/mapa',
+    canActivate: [AuthGuard],
+    data: { role: 'conductor' }, // Solo para conductores
+    loadComponent: () => import('./maps/maps.page').then(m => m.MapsPage)
+  },
+  //pasajero
+  {
+    path: 'pasajero/home',
     canActivate: [AuthGuard],
     data: { role: 'pasajero' }, // Solo para pasajeros
-    children: [
-      {
-        path: 'home',
-        loadComponent: () => import('./pasajero/home-pasajero/home-pasajero.page').then(m => m.HomePasajeroPage)
-      },
-      {
-        path: 'perfil-usuario',
-        loadComponent: () => import('./pasajero/perfil-usuario/perfil-usuario.page').then( m => m.PerfilUsuarioPage)
-      },
-      {
-        path: 'viaje-actual',
-        loadComponent: () => import('./pasajero/viaje-actual/viaje-actual.page').then( m => m.ViajeActualPage)
-      },
-      {
-        path: 'mapa',
-        loadComponent: () => import('./maps/maps.page').then( m => m.MapsPage)
-      },
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
-      },
-      {
-        path: 'detalle-viaje',
-        loadComponent: () => import('./pasajero/detalle-viaje/detalle-viaje.page').then(m => m.DetalleViajePage)
-         },
-    ]
+    loadComponent: () => import('./pasajero/home-pasajero/home-pasajero.page').then(m => m.HomePasajeroPage)
+  },
+  {
+    path: 'pasajero/perfil-usuario',
+    canActivate: [AuthGuard],
+    data: { role: 'pasajero' }, // Solo para pasajeros
+    loadComponent: () => import('./pasajero/perfil-usuario/perfil-usuario.page').then(m => m.PerfilUsuarioPage)
+  },
+  {
+    path: 'pasajero/viaje-actual',
+    canActivate: [AuthGuard],
+    data: { role: 'pasajero' }, // Solo para pasajeros
+    loadComponent: () => import('./pasajero/viaje-actual/viaje-actual.page').then(m => m.ViajeActualPage)
+  },
+  {
+    path: 'pasajero/detalle-viaje',
+    canActivate: [AuthGuard],
+    data: { role: 'pasajero' }, // Solo para pasajeros
+    loadComponent: () => import('./pasajero/detalle-viaje/detalle-viaje.page').then(m => m.DetalleViajePage)
+  },
+  {
+    path: 'pasajero/mapa',
+    canActivate: [AuthGuard],
+    data: { role: 'pasajero' }, // Solo para conductores
+    loadComponent: () => import('./maps/maps.page').then(m => m.MapsPage)
   },
   {
     path: '**',

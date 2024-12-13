@@ -1,0 +1,33 @@
+.navbar {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Añade una sombra al navbar */
+}
+
+.nav-link {
+  color: white;
+  /* Color blanco por defecto */
+  transition: color 0.3s ease;
+  /* Transición suave para el cambio de color */
+}
+
+.nav-link:hover {
+  color: #ffcc00;
+  /* Cambia el color al pasar el mouse (ej. amarillo) */
+  text-decoration: underline;
+  /* Opcional: subraya el texto */
+}
+
+.navbar-text {
+  font-size: 0.9rem;
+  /* Reducir el tamaño de texto en móvil */
+  white-space: nowrap;
+  /* Evitar que se divida en múltiples líneas */
+}
+
+@media (max-width: 768px) {
+  .navbar-text {
+    font-size: 0.8rem;
+    /* Aún más pequeño en pantallas muy pequeñas */
+    text-align: center;
+  }
+}

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/services/auth-firebase.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import Swal from 'sweetalert2';
@@ -12,16 +13,12 @@ import Swal from 'sweetalert2';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, ReactiveFormsModule, CommonModule]
+  imports: [IonicModule, FormsModule, ReactiveFormsModule, CommonModule, RouterModule]
 })
 export class LoginPage {
   uid = '';
   usuario: any = {}
   loginForm!: FormGroup;
-  isAlertOpen = false; // Controlar el estado del IonAlert
-  alertHeader = ''; // Encabezado dinámico del alerta
-  alertMessage = ''; // Mensaje dinámico del alerta
-  alertCssClass = '';
 
   constructor(private fb: FormBuilder, private router: Router,
     private authFirebaseService: AuthService,
@@ -66,39 +63,47 @@ export class LoginPage {
 
         // Mostrar alerta y redirigir según el tipo de usuario
         if (this.usuario[0].tipo === 'conductor') {
-          this.alertHeader = '¡Bienvenido, Conductor!';
-          this.alertMessage = 'Has iniciado sesión exitosamente.';
-          this.isAlertOpen = true;
-          this.alertCssClass = 'success-alert';
-
-          setTimeout(() => {
-            this.isAlertOpen = false; // Cerrar alerta
+          Swal.fire({
+            title: '¡Bienvenido, Conductor!',
+            text: 'Has iniciado sesión exitosamente.',
+            icon: 'success',
+            confirmButtonText: 'Continuar',
+            allowOutsideClick: false,
+            heightAuto: false,
+          }).then(() => {
             this.router.navigate(['conductor/home']);
-          }, 3000);
+          });
         } else if (this.usuario[0].tipo === 'pasajero') {
-          this.alertHeader = '¡Bienvenido, Pasajero!';
-          this.alertMessage = 'Has iniciado sesión exitosamente.';
-          this.isAlertOpen = true;
-          this.alertCssClass = 'success-alert';
-
-          setTimeout(() => {
-            this.isAlertOpen = false; // Cerrar alerta
+          Swal.fire({
+            title: '¡Bienvenido, Pasajero!',
+            text: 'Has iniciado sesión exitosamente.',
+            icon: 'success',
+            confirmButtonText: 'Continuar',
+            allowOutsideClick: false,
+            heightAuto: false,
+          }).then(() => {
             this.router.navigate(['pasajero/home']);
-          }, 3000);
+          });
         }
       } catch (error: any) {
-        // Manejo de errores
-        this.alertHeader = 'Error de Inicio de Sesión';
-        this.alertMessage = 'Credenciales invalidas' // Obtener mensaje personalizado
-        this.alertCssClass = 'error-alert';
-        this.isAlertOpen = true;
+        Swal.fire({
+          title: 'Error de Inicio de Sesión',
+          text: 'Credenciales inválidas. Intenta nuevamente.',
+          icon: 'error',
+          confirmButtonText: 'Cerrar',
+          heightAuto: false,
+        });
       }
     } else {
-      console.error('Formulario no válido');
+      Swal.fire({
+        title: 'Formulario no válido',
+        text: 'Por favor, revisa los campos.',
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+        heightAuto: false,
+      });
+
     }
   }
 
-  resetAlert() {
-    this.isAlertOpen = false;
-  }
-  }//FIn
+}//FIn

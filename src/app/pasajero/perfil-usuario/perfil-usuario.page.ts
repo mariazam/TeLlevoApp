@@ -6,13 +6,14 @@ import { IonicModule } from '@ionic/angular';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { AuthService } from 'src/app/services/auth-firebase.service';
+import { MenuComponent } from "../../menu-pasajero/menu.component";
 
 @Component({
   selector: 'app-perfil-usuario',
   templateUrl: './perfil-usuario.page.html',
   styleUrls: ['./perfil-usuario.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, MenuComponent]
 })
 export class PerfilUsuarioPage implements OnInit {
 
@@ -48,7 +49,7 @@ export class PerfilUsuarioPage implements OnInit {
 
   async cerrarSesion() {
     try {
-      
+      await signOut(this.auth);
       this.router.navigate(['/login']);
     }
     catch (error) {

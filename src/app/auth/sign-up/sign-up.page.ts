@@ -7,13 +7,15 @@ import { addIcons } from 'ionicons';
 import { carSportOutline, peopleOutline } from 'ionicons/icons';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { AuthService } from 'src/app/services/auth-firebase.service';
+import Swal from 'sweetalert2';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.page.html',
   styleUrls: ['./sign-up.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, ReactiveFormsModule, CommonModule]
+  imports: [IonicModule, FormsModule, ReactiveFormsModule, CommonModule, RouterModule]
 })
 
 export class SignUpPage {
@@ -178,54 +180,57 @@ export class SignUpPage {
   // Métodos para manejar el envío del formulario
   async submitPasajero() {
     this.formPasajero.markAllAsTouched();
-
+  
     if (this.formPasajero.valid) {
       const pasajero = {
         nombre: this.formPasajero.get('nombre')?.value,
         apellido: this.formPasajero.get('apellido')?.value,
         email: this.formPasajero.get('email')?.value,
         telefono: this.formPasajero.get('telefono')?.value,
-        enViaje: false,
         uid: '',
-        tipo: "pasajero"
-      }
-      //crear cuenta en firebase auth
+        tipo: 'pasajero',
+        enViaje: false,
+      };
+  
       try {
-        // Espera hasta que Firebase genere el UID
-        const userCredential = await this.authFirebaseService.register(
-          pasajero.email,
-          this.formPasajero.get('password')?.value
-        );
-
-        // Asigna el UID al pasajero
-        const user = userCredential.user;
-        pasajero.uid = user.uid;
-
-
-        console.log('Datos del pasajero:', pasajero);
-
-        let resp = await this.firestoreService.addDocument("usuarios", pasajero)
-        if (resp) {
-          alert('usuario pasajero agregada')
+        const userCredential = await this.authFirebaseService.register(pasajero.email, this.formPasajero.get('password')?.value);
+        pasajero.uid = userCredential.user.uid;
+  
+        await this.firestoreService.addDocument('usuarios', pasajero);
+  
+        Swal.fire({
+          title: 'Registro exitoso',
+          text: 'Usuario pasajero registrado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+        }).then(() => {
           this.router.navigate(['login']);
-        } else {
-          alert('usuario pasajero no agregada')
-        }
+        });
       } catch (error) {
-        console.error('Error en la creación del usuario:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al registrar el usuario.',
+          icon: 'error',
+          confirmButtonText: 'Cerrar',
+          heightAuto: false,
+        });
       }
-
+    } else {
+      Swal.fire({
+        title: 'Formulario inválido',
+        text: 'Por favor, completa todos los campos correctamente.',
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+        heightAuto: false,
+      });
     }
-
-    else {
-      console.error('Formulario no valido');
-    }
-
   }
 
   async submitConductor() {
+    this.formCondutor.markAllAsTouched(); 
+
     if (this.formCondutor.valid) {
-      this.formCondutor.markAllAsTouched();
       const conductor = {
         nombre: this.formCondutor.get('nombre')?.value,
         email: this.formCondutor.get('email')?.value,
@@ -242,33 +247,40 @@ export class SignUpPage {
       //crear cuenta en firebase auth
       try {
         // Espera hasta que Firebase genere el UID
-        const userCredential = await this.authFirebaseService.register(
-          conductor.email,
-          this.formCondutor.get('password')?.value
-        );
+        const userCredential = await this.authFirebaseService.register(conductor.email, this.formCondutor.get('password')?.value);
 
-        // Asigna el UID al pasajero
-        const user = userCredential.user;
-        conductor.uid = user.uid;
+        // Asignar el UID generado por Firebase
+        conductor.uid = userCredential.user.uid;
 
+        await this.firestoreService.addDocument("usuarios", conductor)
 
-        let resp = await this.firestoreService.addDocument("usuarios", conductor)
-        if (resp) {
-          alert('usuario pasajero agregada')
+        Swal.fire({
+          title: 'Registro exitoso',
+          text: 'Usuario conductor registrado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+        }).then(() => {
           this.router.navigate(['login']);
-        } else {
-          alert('usuario pasajero no agregada')
-        }
+        });
       } catch (error) {
-        console.error('Error en la creación del usuario:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al registrar el usuario.',
+          icon: 'error',
+          confirmButtonText: 'Cerrar',
+          heightAuto: false,
+        });
       }
-
-
+    } else {
+      Swal.fire({
+        title: 'Formulario inválido',
+        text: 'Por favor, completa todos los campos correctamente.',
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+        heightAuto: false,
+      });
     }
-    else {
-      console.error('Formulario no valido');
-    }
-
   }
 }
 

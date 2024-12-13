@@ -1,32 +1,42 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <div *ngIf="userConductor[0]">
-      <ion-title>{{ userConductor[0].nombre }}</ion-title>
-    </div>
-  </ion-toolbar>
-</ion-header>
+<div>
+  <!-- Menu de navegación -->
+  <app-menu2 [nombreUser]="nombreUser"></app-menu2>
 
-<ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-content>
+  <!-- Card principal -->
+  <div class="card shadow m-2">
+    <div class="card-body">
       <div *ngIf="userConductor[0]">
-        <ion-item>
-          <span><strong>Nombre:</strong></span>
-          <span class="ion-margin-start">{{ capitalizeFirstLetter(userConductor[0].nombre) }}</span>
-        </ion-item>
-        <ion-item>
-          <span><strong>Correo electrónico:</strong></span><span> {{ userConductor[0].email }}</span>
-        </ion-item>
-        <ion-item>
-          <span><strong>Telefono:</strong></span><span class="ion-margin-start"> {{ userConductor[0].telefono }}</span>
-        </ion-item>
-        <ion-item>
-          <span><strong>valoración:</strong></span><span class="ion-margin-start"> {{ valor }}</span>
-        </ion-item>
+        <!-- Campo: Nombre -->
+        <div class="mb-3">
+          <strong>Nombre:</strong>
+          <span class="ms-2">{{ capitalizeFirstLetter(userConductor[0].nombre) }}</span>
+        </div>
+
+        <!-- Campo: Correo electrónico -->
+        <div class="mb-3">
+          <strong>Correo electrónico:</strong>
+          <span class="ms-2">{{ userConductor[0].email }}</span>
+        </div>
+
+        <!-- Campo: Teléfono -->
+        <div class="mb-3">
+          <strong>Teléfono:</strong>
+          <span class="ms-2">{{ userConductor[0].telefono }}</span>
+        </div>
+
+        <!-- Campo: Valoración -->
+        <div class="mb-3">
+          <strong>Valoración:</strong>
+          <span class="ms-2">{{ valor }}</span>
+        </div>
       </div>
-      <ion-button color="danger" (click)="cerrarSesion()" class="ion-margin">
-        Cerrar sesión
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
-</ion-content>
+
+      <!-- Botón: Cerrar sesión -->
+      <div class="text-center">
+        <button class="btn btn-danger mt-3" (click)="cerrarSesion()">
+          <i class="bi bi-escape"></i>
+          Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
