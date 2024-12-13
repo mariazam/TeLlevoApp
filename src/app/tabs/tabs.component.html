@@ -1,25 +1,24 @@
-<ion-content>
-  <ion-tabs>
-    <ion-tab-bar slot="buttom">
-      
-      <ion-tab-button tab="home">
-        <ion-icon name="home-outline"></ion-icon>
-        <ion-label>Home</ion-label>
-      </ion-tab-button>
+<div class="tabs-container">
+  <mat-tab-group>
+    <!-- Tab Home -->
+    <mat-tab label="Home">
+      <div class="tab-content">
+        <app-conductor></app-conductor>
+      </div>
+    </mat-tab>
 
-      <ion-tab-button tab="carreras-en-proceso">
-        <ion-icon name="car-sport-outline"></ion-icon>
-        <ion-label>carrera</ion-label>
-      </ion-tab-button>
+    <!-- Tab Carreras -->
+    <mat-tab label="Carreras">
+      <div class="tab-content">
+        <app-carreras-en-proceso></app-carreras-en-proceso>
+      </div>
+    </mat-tab>
 
-      <ion-tab-button tab="perfil-usuario">
-        <ion-icon name="person-outline"></ion-icon>
-        <ion-label>usuario</ion-label>
-      </ion-tab-button>
-
-    </ion-tab-bar>
-
-  </ion-tabs>
-
-
-</ion-content>
+    <!-- Tab Perfil -->
+    <mat-tab label="Perfil">
+      <div class="tab-content">
+        <app-perfil-usuario></app-perfil-usuario>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

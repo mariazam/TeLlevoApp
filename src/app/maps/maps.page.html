@@ -1,16 +1,19 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>Mapa</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <!-- Contenedor del mapa -->
-  <div id="map" style="height: 60vh; width: 100%;"></div>
-
-  <!-- Contenedor para mostrar los detalles del trayecto -->
-  <div id="trayecto" style="height: 40vh; overflow-y: auto; background-color: #f4f4f4; padding: 10px;">
-    <p><strong>Detalles del trayecto:</strong></p>
+<div>
+  <div class="container-fluid bg-primary text-white py-2 d-flex align-items-center">
+    <button class="btn btn-light btn-sm me-3" (click)="volver()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h1 class="h5 text-center flex-grow-1 mb-0">Mapa</h1>
+  </div>
+  <div class="row">
+    <!-- Contenedor del mapa -->
+    <div class="col-12" id="map" style="height: 60vh; width: 100%;"></div>
   </div>
 
-</ion-content>
+  <!-- Contenedor para detalles del trayecto -->
+  <div class="row mx-1">
+    <div class="col-12" id="trayecto" style="height: 40vh; overflow-y: auto; background-color: #f4f4f4; padding: 10px;">
+      <p><strong>Detalles del trayecto:</strong></p>
+    </div>
+  </div>
+</div>

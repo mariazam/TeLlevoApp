@@ -7,17 +7,20 @@ import { StorageService } from 'src/app/services/storage.service';
 import { Router } from '@angular/router';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { AuthService } from 'src/app/services/auth-firebase.service';
+import { MenuComponent } from "../../menu-pasajero/menu.component";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-viaje-actual',
   templateUrl: './viaje-actual.page.html',
   styleUrls: ['./viaje-actual.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, MenuComponent]
 })
 export class ViajeActualPage implements OnInit {
 
   auth = getAuth();
+  nombreUser = ""
   userPasajero: any = {}
   userConductor: any = {}
   valor: number | null = null; // Variable para almacenar el valor ingresado
@@ -46,15 +49,16 @@ export class ViajeActualPage implements OnInit {
   async datosUsuario() {
     try {
       this.uidPasajero = await this.authService.getCurrentUser(); // Obtener el UID del usuario autenticado
-      console.log("22", this.uidPasajero)
+
 
       this.userPasajero = await this.firestoreService.getDocumentsByUidAndField("usuarios", "uid", this.uidPasajero); // Esperar los datos del conductor
       this.userPasajeroJson = this.userPasajero[0]
-      console.log("333", this.userPasajeroJson)
+      this.nombreUser = this.userPasajeroJson.nombre
+
 
       this.viajeActual = await this.firestoreService.getDocumentsByUidAndField("viaje", "idPasajero", this.uidPasajero, "estado", true);
       this.viajeActualJson = this.viajeActual[0]
-      console.log("hgkjh", this.viajeActualJson)
+
 
       this.carreraExistente = await this.firestoreService.getDocumentById('carreras', this.viajeActualJson.idCarrera);
 
@@ -121,63 +125,132 @@ export class ViajeActualPage implements OnInit {
 
     // Verificar si la diferencia es menor o igual a 30 minutos
     if (diferenciaMs <= treintaMinutosMs) {
-      // Mostrar una alerta explicando el motivo del rechazo
-      alert("No se puede cancelar la carrera con menos de 30 minutos de antelación.");
+      // Mostrar SweetAlert explicando el motivo del rechazo
+      Swal.fire({
+        icon: 'error',
+        title: 'Cancelación no permitida',
+        text: 'No se puede cancelar la carrera con menos de 30 minutos de antelación.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+      });
       return; // Salir de la función para evitar continuar
     }
 
-    const newUserPasajero = {
-      ...this.userPasajeroJson,
-      enViaje: false
+    // Confirmación para cancelar el viaje
+    const confirmResult = await Swal.fire({
+      icon: 'warning',
+      title: '¿Estás seguro?',
+      text: '¿Deseas cancelar el viaje? Esta acción no se puede deshacer.',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cancelar',
+      cancelButtonText: 'No',
+      heightAuto: false,
+    });
+
+    if (!confirmResult.isConfirmed) {
+      // Si el usuario cancela, salir de la función
+      return;
     }
 
-    const respuesta = await this.firestoreService.updateDocument("usuarios", this.userPasajeroJson.id, newUserPasajero)
+    try {
+      const newUserPasajero = {
+        ...this.userPasajeroJson,
+        enViaje: false
+      }
+
+      await this.firestoreService.updateDocument("usuarios", this.userPasajeroJson.id, newUserPasajero)
+
+      const newCarrera = {
+        ...this.carreraExistente,
+        disponibilidad: this.carreraExistente.disponibilidad + this.viajeActualJson.cantidadPersonas
+      }
+
+      await this.firestoreService.updateDocument("carreras", this.carreraExistente.id, newCarrera)
 
 
-    const newCarrera = {
-      ...this.carreraExistente,
-      disponibilidad: this.carreraExistente.disponibilidad + this.viajeActualJson.cantidadPersonas
+      await this.firestoreService.deleteDocument("viaje", this.viajeActualJson.id);
+
+      // Mostrar mensaje de éxito
+      await Swal.fire({
+        icon: 'success',
+        title: 'Viaje cancelado',
+        text: 'El viaje ha sido cancelado con éxito.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+      });
+
+      // Redirigir al usuario
+      window.location.href = '/pasajero/home';
+    } catch (error) {
+      // Manejo de errores con SweetAlert
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al cancelar el viaje',
+        text: 'Ocurrió un problema al intentar cancelar el viaje. Por favor, inténtalo de nuevo más tarde.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+      });
+      console.error('Error al cancelar el viaje:', error);
     }
-
-    const resp = await this.firestoreService.updateDocument("carreras", this.carreraExistente.id, newCarrera)
-
-
-    const eliminado = await this.firestoreService.deleteDocument("viaje", this.viajeActualJson.id);
-
-    window.location.href = '/pasajero/home';
-
   }
 
   async valorar() {
     if (this.esValorValido()) {
-      // Realizar la acción de enviar valoración
 
-      const newViaje = {
-        ...this.viajeActualJson,
-        puntuacion: true
+      try {
+
+        const newViaje = {
+          ...this.viajeActualJson,
+          puntuacion: true
+        }
+
+        await this.firestoreService.updateDocument("viaje", this.viajeActualJson.id, newViaje)
+
+        const newUserConductor = {
+          ...this.userConductorJson,
+          valoracion: [...this.userConductorJson.valoracion, this.valor]
+        }
+
+        await this.firestoreService.updateDocument("usuarios", this.userConductorJson.id, newUserConductor)
+
+        // Mostrar mensaje de éxito
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Valoración enviada!',
+          text: 'Gracias por valorar al conductor.',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+        });
+
+        // Recargar la página o redirigir si es necesario
+        window.location.reload();
+
+      } catch (error) {
+        // Mostrar error con SweetAlert2
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al enviar la valoración',
+          text: 'Ocurrió un problema al procesar tu valoración. Por favor, inténtalo nuevamente más tarde.',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+        });
       }
-
-      const resp = await this.firestoreService.updateDocument("viaje", this.viajeActualJson.id, newViaje)
-
-      const newUserConductor = {
-        ...this.userConductorJson,
-        valoracion: [...this.userConductorJson.valoracion, this.valor]
-      }
-
-      const resp2 = await this.firestoreService.updateDocument("usuarios", this.userConductorJson.id, newUserConductor)
-
-      window.location.reload();
-
-      this.mensajeError = ''; // Limpiar el mensaje de error si es válido
     } else {
-      // Mostrar mensaje de error
-      this.mensajeError = 'Por favor, ingresa un valor entre 1 y 5.';
+      // Mostrar mensaje de error con SweetAlert2
+      Swal.fire({
+        icon: 'error',
+        title: 'Valoración inválida',
+        text: 'Por favor, ingresa un valor entre 1 y 5.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+      });
     }
   }
 
   verRecorrido() {
     // Navegar a la página de recorrido
-    this.router.navigate(['/pasajero/mapa'],{
-      queryParams: { idV: this.viajeActualJson.id }});
+    this.router.navigate(['/pasajero/mapa'], {
+      queryParams: { idV: this.viajeActualJson.id }
+    });
   }
 }

@@ -2,14 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { TabsComponent } from '../../tabs/tabs.component';
-import { Menu2Component } from '../../menu2/menu2.component';
+import { Menu2Component } from '../../menu2-conductor/menu2.component';
 import { addIcons } from 'ionicons';
 import { Router } from '@angular/router';
 import { personCircleOutline } from 'ionicons/icons';
 import { NuevaCarreraComponent } from '../../modals/modal-nueva-carrera/nueva-carrera.component';
 import { IonModal } from '@ionic/angular';
-import { StorageService } from 'src/app/services/storage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { AuthService } from 'src/app/services/auth-firebase.service';
 
@@ -19,11 +17,10 @@ import { AuthService } from 'src/app/services/auth-firebase.service';
   templateUrl: './home-conductor.page.html',
   styleUrls: ['./home-conductor.page.scss'],
   standalone: true,
-  imports: [IonicModule, TabsComponent, Menu2Component, CommonModule, FormsModule, NuevaCarreraComponent]
+  imports: [IonicModule, CommonModule, FormsModule, NuevaCarreraComponent, Menu2Component]
 
 })
 export class ConductorPage implements OnInit {
-
   uid: string | null = null;
   userConductor: any = [];
   nombreUser: string = "";

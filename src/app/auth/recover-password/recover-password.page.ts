@@ -4,6 +4,9 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } 
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth-firebase.service';
+import { RouterModule } from '@angular/router';
+import Swal from 'sweetalert2';
+
 
 
 @Component({
@@ -11,7 +14,7 @@ import { AuthService } from 'src/app/services/auth-firebase.service';
   templateUrl: './recover-password.page.html',
   styleUrls: ['./recover-password.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, ReactiveFormsModule, CommonModule]
+  imports: [IonicModule, FormsModule, ReactiveFormsModule, CommonModule, RouterModule]
 })
 export class RecoverPasswordPage {
 
@@ -34,20 +37,40 @@ export class RecoverPasswordPage {
     this.recoverForm.markAllAsTouched();
     if (this.recoverForm.valid) {
       const email = this.recoverForm.get('email')?.value;
-
-      this.authFirebaseService.recoverPassword( email)
+  
+      this.authFirebaseService.recoverPassword(email)
         .then(() => {
-          
-          console.log("se envio el correo")
-          this.router.navigate(['/login']);
+          Swal.fire({
+            title: '¡Correo enviado!',
+            text: 'Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false,
+            heightAuto: false,
+          }).then(() => {
+            this.router.navigate(['/login']);
+          });
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ..
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al enviar el correo. Por favor, inténtalo nuevamente.',
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+            allowOutsideClick: false,
+            heightAuto: false,
+          });
         });
     } else {
-      console.error('Formulario no valido');
+      Swal.fire({
+        title: 'Formulario no válido',
+        text: 'Por favor, ingresa un correo electrónico válido.',
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+        allowOutsideClick: false,
+        heightAuto: false,
+      });
     }
   }
+  
 }

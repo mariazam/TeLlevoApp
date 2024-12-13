@@ -1,50 +1,55 @@
-<header>
-  <ion-toolbar color="primary">
-    <div *ngIf="userConductor[0]">
-      <ion-title>{{ nombreUser }}</ion-title>
-    </div>
-  </ion-toolbar>
-</header>
-<app-menu2></app-menu2>
-
-<ion-content class="ion-padding">
-  <ion-button id="open-modal" [disabled]="carreraExistenteActiva">Nueva carrera</ion-button>
-  <app-nueva-carrera></app-nueva-carrera>
-
-  <div *ngIf="carreraExistenteActiva">
-    <div class="ion-text-center">
-      <h1>Pasajeros</h1>
-    </div>
-    <div *ngIf="viajes.length == 0" class="ion-text-center">
-      <span style="color: gray;">Sin pasajeros actualmente</span>
+<div class="page-container">
+  <!-- Header -->
+  <app-menu2 [nombreUser]="nombreUser"></app-menu2>
+  
+  <!-- Contenedor con scroll -->
+  <div class="scrollable-content">
+    <div class="mb-3">
+      <button type="button" class="btn btn-success m-3" data-bs-toggle="modal" data-bs-target="#nuevaCarreraModal" [disabled]="carreraExistenteActiva">
+        <i class="bi bi-plus-circle"></i>
+        Nueva carrera
+      </button>
+      <app-nueva-carrera></app-nueva-carrera>
     </div>
 
-    <ion-card *ngFor="let c of  viajes">
-      <ion-card-header>
-        <ion-grid>
-          <ion-row class="ion-align-items-center">
-            <ion-col size="auto">
-              <ion-icon class="custom-icon" name="person-circle-outline"></ion-icon>
-            </ion-col>
-            <ion-col>
-              <h4><strong>{{ capitalizeFirstLetter(c.nombre) }}</strong></h4>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-header>
-      <ion-card-content>
-        <div>
-          <span>Cantidad de pasajeros: {{c.cantidadPersonas}}</span>
+    <div *ngIf="carreraExistenteActiva">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h1 class="h5">
+            <strong>
+              Actualmente hay una carrera en proceso. Para más información, 
+              <a href="conductor/carreras-en-proceso">presione aquí</a>.
+            </strong>
+          </h1>
         </div>
-        <div>
-          <span>Número de teléfono: {{c.telefono}}</span>
-        </div>
+      </div>
+      
+      <div class="text-center mt-4 mb-4">
+        <h2 class="fw-bold">Pasajeros</h2>
+      </div>
+      
+      <div *ngIf="viajes.length == 0" class="text-center text-muted">
+        <span>Sin pasajeros actualmente</span>
+      </div>
 
-        <div>
-          <span>destino: {{c.destino}}</span>
+      <!-- Tarjetas para pasajeros -->
+      <div class="row">
+        <div class="col-md-6 col-lg-4 mb-3" *ngFor="let c of viajes">
+          <div class="card shadow-sm">
+            <div class="card-header d-flex align-items-center">
+              <div class="me-3">
+                <i class="bi bi-person-circle fs-3"></i>
+              </div>
+              <h5 class="mb-0"><strong>{{ capitalizeFirstLetter(c.nombre) }}</strong></h5>
+            </div>
+            <div class="card-body">
+              <p class="mb-1"><strong>Cantidad de pasajeros:</strong> {{ c.cantidadPersonas }}</p>
+              <p class="mb-1"><strong>Número de teléfono:</strong> {{ c.telefono }}</p>
+              <p class="mb-0"><strong>Destino:</strong> {{ c.destino }}</p>
+            </div>
+          </div>
         </div>
-
-      </ion-card-content>
-    </ion-card> <!-- fin cart -->
+      </div>
+    </div>
   </div>
-</ion-content>
+</div>

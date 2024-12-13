@@ -3,8 +3,10 @@ import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { searchOutline } from 'ionicons/icons';
 import { Geolocation } from '@capacitor/geolocation';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth-firebase.service';
 
 declare var google: any;
 
@@ -16,6 +18,8 @@ declare var google: any;
   imports: [IonicModule]
 })
 export class MapsPage implements OnInit, OnDestroy {
+  user: any = [];
+  uid: string | null = "";
   mapa: any;
   marker: any;
   // currentLocation: any; // Variable para almacenar la ubicación actual
@@ -26,14 +30,14 @@ export class MapsPage implements OnInit, OnDestroy {
   direccionInicio: string = '';
   direccionFin: string = '';
   coordenadasInicio: any = null;
-  coordenadasFin: any = null; 
-  
+  coordenadasFin: any = null;
+
 
   // Variables para direcciones
   directionsService: any;
   directionsRenderer: any;
 
-  constructor(private router: ActivatedRoute, private firestoreService: FirestoreService) {
+  constructor(private router: ActivatedRoute, private firestoreService: FirestoreService, private router2: Router, private authService: AuthService) {
     addIcons({ searchOutline });
   }
 
@@ -41,7 +45,7 @@ export class MapsPage implements OnInit, OnDestroy {
     this.router.queryParams.subscribe(async (params) => {
       this.resetState();
       this.par_id = params['idV'];
-  
+
       // Esperar a que datosCarrera obtenga las direcciones
       if (this.par_id) {
         await this.datosCarrera(); // Cargar datos del viaje y la carrera
@@ -72,14 +76,14 @@ export class MapsPage implements OnInit, OnDestroy {
   }
 
   async datosCarrera() {
-      
-    this.viaje = await this.firestoreService.getDocumentById("viaje",this.par_id)
-    
-    this.carrera = await this.firestoreService.getDocumentById("carreras",this.viaje.idCarrera)
+
+    this.viaje = await this.firestoreService.getDocumentById("viaje", this.par_id)
+
+    this.carrera = await this.firestoreService.getDocumentById("carreras", this.viaje.idCarrera)
 
     this.direccionInicio = this.carrera.inicioRuta
     this.direccionFin = this.viaje.destino
-    
+
   }
 
   async obtenerCoordenadasYCalcularRuta() {
@@ -110,8 +114,25 @@ export class MapsPage implements OnInit, OnDestroy {
       }
     });
   }
+  async volver () {
+    try {
+      // Obtener el UID del usuario autenticado
+      const uid = await this.authService.getCurrentUser();
+      this.uid = uid;
+      // Obtener datos del usuario
+      this.user = await this.firestoreService.getDocumentsByUidAndField("usuarios", "uid", this.uid);
 
-   
+      if (this.user[0].tipo == "pasajero") {
+        this.router2.navigate(['/pasajero/viaje-actual']); // Cambia '/ruta-anterior' por la ruta deseada.
+      } else if (this.user[0].tipo == "conductor") {
+        this.router2.navigate(['/conductor/carreras-en-proceso']); // Cambia '/ruta-anterior' por la ruta deseada.
+      }
+    } catch {
+      console.error();
+    }
+
+  }
+
   dibujarMapa() {
     const mapElement = document.getElementById('map');
     if (mapElement && this.coordenadasInicio) {

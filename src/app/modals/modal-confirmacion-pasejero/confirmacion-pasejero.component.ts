@@ -1,19 +1,17 @@
-import { Component, ViewChild, Input, OnInit } from '@angular/core';
-import { IonModal } from '@ionic/angular';
-import { OverlayEventDetail } from '@ionic/core/components';
-import { IonicModule } from '@ionic/angular';
+import { Component, NgZone , Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { AuthService } from 'src/app/services/auth-firebase.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-confirmacion-pasejero',
   templateUrl: './confirmacion-pasejero.component.html',
   styleUrls: ['./confirmacion-pasejero.component.scss'],
   standalone: true,
-  imports: [IonicModule, ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class ConfirmacionPasejeroComponent implements OnInit {
 
@@ -21,14 +19,12 @@ export class ConfirmacionPasejeroComponent implements OnInit {
   userPasajero: any = {};
   @Input() carrera: any;
 
-  @ViewChild(IonModal, { static: true }) modal!: IonModal;
-
   FormConfimacionPasaje!: FormGroup;
 
   // Control para saber qué formulario mostrar
   selectedForm: string | null = null;
 
-  constructor(private router: Router, private authService: AuthService, private firestoreService: FirestoreService) { }
+  constructor(private ngZone: NgZone, private router: Router, private authService: AuthService, private firestoreService: FirestoreService) { }
 
   ngOnInit() {
     console.log("Detalles de la carrera:", this.carrera);
@@ -61,7 +57,6 @@ export class ConfirmacionPasejeroComponent implements OnInit {
 
 
   cancel() {
-    this.modal.dismiss(null, 'cancel');
     this.router.navigate(['/pasajero/home']);
   }
 
@@ -75,8 +70,6 @@ export class ConfirmacionPasejeroComponent implements OnInit {
         this.uid = uid;
         this.userPasajero = await this.firestoreService.getDocumentsByUidAndField('usuarios', 'uid', this.uid);
 
-        console.log('this.userPasajero', this.userPasajero);
-
         const NuevoViaje = {
           cantidadPersonas: this.FormConfimacionPasaje.get('cantidadPersonas')?.value,
           destino: this.FormConfimacionPasaje.get('destino')?.value,
@@ -89,56 +82,63 @@ export class ConfirmacionPasejeroComponent implements OnInit {
           estado: true
         };
 
-        const resp = await this.firestoreService.addDocument('viaje', NuevoViaje);
-
-        if (resp) {
-          console.log("exitoso")
-        }
+        await this.firestoreService.addDocument('viaje', NuevoViaje);
 
         const newUserPasajero = {
           ...this.userPasajero[0],
           enViaje: true
         }
-        console.log("sape", newUserPasajero)
 
-        const respUpdute = await this.firestoreService.updateDocument("usuarios", newUserPasajero.id, newUserPasajero)
-        console.log("exitoso", respUpdute)
+        await this.firestoreService.updateDocument("usuarios", newUserPasajero.id, newUserPasajero)
+
 
         const newCarrera = {
           ...this.carrera,
           disponibilidad: this.carrera.disponibilidad - NuevoViaje.cantidadPersonas
         };
 
-        console.log("ppppp", newCarrera)
+        await this.firestoreService.updateDocument('carreras', newCarrera.id, newCarrera);
 
-        const resp2 = await this.firestoreService.updateDocument('carreras', newCarrera.id, newCarrera);
-
-
-        console.log("pesp2", resp2)
-
-        window.location.href = '/pasajero/viaje-actual';
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Viaje reservado!',
+          text: 'Se ha reservado el viaje exitosamente.',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+        }).then(() => {
+          window.location.href = '/pasajero/home';
+        });
 
 
       } catch (error) {
-        console.error('Error al obtener el usuario o conductor:', error);
+        // Mostrar mensaje de error
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al reservar el viaje',
+          text: 'Hubo un problema al intentar reservar el viaje. Por favor, inténtelo más tarde.',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false
+        });
       }
-
-      // Cerrar el modal después de confirmar
-      this.modal.dismiss(null, 'confirm');
+    }
+    else {
+      // Mostrar alerta si el formulario no es válido
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: 'Por favor, complete todos los campos requeridos antes de continuar.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+      });
     }
   }
 
-
-
-
-  // Método para seleccionar qué formulario mostrar
-  showForm(formType: string) {
-    this.selectedForm = formType;
+  openModal() {
+    this.ngZone.runOutsideAngular(() => {
+      const modalButton = document.getElementById('modalButton');
+      modalButton?.click();
+    });
   }
-
-
-
-
-
 
 }
